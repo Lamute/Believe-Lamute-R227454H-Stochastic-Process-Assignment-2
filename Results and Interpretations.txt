@@ -97,21 +97,11 @@ null device
 
 COMMENT A2(a): Two main communicating structures exist: {1,2} and {3–7}.
 
-A2(b) CLASSIFICATION:
-• {1,2} forms a closed communicating class
-• States 3–7 form a second interacting class
-• No absorbing states present
-• Periodicity exists in {1,2} cycle
-
 A2(c) SIMULATION COMMENT:
 Trajectories show switching between classes depending on starting state.
 Long-run behavior depends heavily on initial conditions.
 null device 
           1 
-
-A2(d) LIMITING BEHAVIOR:
-Chain is NOT fully ergodic due to multiple communicating classes.
-Limiting distribution depends on initial class.
 
 ==================== A3 =====================
 
@@ -122,14 +112,6 @@ Jammed state dominates due to high persistence (0.9).
 1     1 0.01861893 0.16662 1.070811
 2     2 0.01861893 0.16662 1.070811
 3     3 0.01861893 0.16662 1.070811
-
-A3(b) SIMULATION COMMENT:
-Simulation confirms theoretical distribution.
-High congestion persistence leads to JAMMED dominance.
-  State   Prob
-1     1 0.0135
-2     2 0.1289
-3     3 0.8576
 null device 
           1 
 

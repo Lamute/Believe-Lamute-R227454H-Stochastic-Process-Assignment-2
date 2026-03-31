@@ -27,12 +27,17 @@ for(p in packages){
 out_dir <- "C:/Users/Believe M Lamute/OneDrive/Desktop/LAMUTE"
 dir.create(out_dir, recursive = TRUE, showWarnings = FALSE)
 
+# SUBFOLDERS (ADDED ONLY)
+dir.create(file.path(out_dir,"A1"), showWarnings = FALSE)
+dir.create(file.path(out_dir,"A2"), showWarnings = FALSE)
+dir.create(file.path(out_dir,"A3"), showWarnings = FALSE)
+
 cat("\nOUTPUT FOLDER:\n", out_dir, "\n")
 
 ##############################
 # ENABLE DUAL CONSOLE + FILE OUTPUT
 ##############################
-log_file <- file.path(out_dir, "console_output.txt")
+log_file <- file.path(out_dir, "Results and Interpretations.txt")
 sink(log_file, split = TRUE)
 
 ##############################
@@ -106,7 +111,7 @@ cat("• Periodicity shows cyclic movement in S4–S5 loop\n")
 
 g1 <- graph_from_adjacency_matrix(P1, weighted=TRUE, mode="directed")
 
-png(file.path(out_dir, "A1a_MarkovChain.png"), width=800, height=600)
+png(file.path(out_dir,"A1","A1a_MarkovChain.png"), width=800, height=600)
 plot(g1,
      edge.label=round(E(g1)$weight,2),
      vertex.color=c("red","skyblue","skyblue","skyblue","skyblue"),
@@ -133,8 +138,9 @@ paths1 <- lapply(1:3, function(x){
   simulate_path(P1, sample(1:5,1), 25)
 })
 
-write.xlsx(as.data.frame(do.call(cbind, paths1)),
-           file.path(out_dir,"A1b_Trajectories.xlsx"))
+write.csv(as.data.frame(do.call(cbind, paths1)),
+          file.path(out_dir,"A1","A1b_Trajectories.csv"),
+          row.names = FALSE)
 
 cat("\nA1(b) SIMULATION COMMENTARY:\n")
 cat("Three trajectories were simulated.\n")
@@ -143,7 +149,7 @@ cat("This confirms long-run absorption behavior of the chain.\n")
 
 print(as.data.frame(do.call(cbind, paths1)))
 
-png(file.path(out_dir, "A1b_Trajectories.png"), width=800, height=600)
+png(file.path(out_dir,"A1","A1b_Trajectories.png"), width=800, height=600)
 matplot(do.call(cbind, paths1), type="l", lwd=2, col=1:3,
         main="A1(b): Trajectories")
 
@@ -156,8 +162,9 @@ dev.off()
 eig <- eigen(t(P1))
 pi1 <- Re(eig$vectors[,1]); pi1 <- pi1/sum(pi1)
 
-write.xlsx(data.frame(State=states1, Prob=pi1),
-           file.path(out_dir,"A1c_SteadyState.xlsx"))
+write.csv(data.frame(State=states1, Prob=pi1),
+          file.path(out_dir,"A1","A1c_SteadyState.csv"),
+          row.names = FALSE)
 
 cat("\nA1(c) STEADY STATE INTERPRETATION:\n")
 cat("Steady-state distribution shows probability mass concentrates at absorbing state S1.\n")
@@ -176,13 +183,15 @@ for(i in 1:steps){
   pi0 <- pi0 %*% P1
 }
 
-write.xlsx(prob1, file.path(out_dir,"A1d_Convergence.xlsx"))
+write.csv(prob1,
+          file.path(out_dir,"A1","A1d_Convergence.csv"),
+          row.names = FALSE)
 
 cat("\nA1(d) CONVERGENCE COMMENT:\n")
 cat("Probabilities converge rapidly toward absorbing state S1.\n")
 cat("This shows fast convergence due to absorbing structure.\n")
 
-png(file.path(out_dir, "A1d_Convergence.png"), width=800, height=600)
+png(file.path(out_dir,"A1","A1d_Convergence.png"), width=800, height=600)
 matplot(prob1, type="l", lwd=2, col=1:5,
         main="A1(d): Convergence")
 
@@ -214,7 +223,7 @@ mc2 <- new("markovchain", transitionMatrix=P2)
 
 g2 <- graph_from_adjacency_matrix(P2, weighted=TRUE)
 
-png(file.path(out_dir, "A2a_Diagram.png"), width=800, height=600)
+png(file.path(out_dir,"A2","A2a_Diagram.png"), width=800, height=600)
 plot(g2,
      edge.label=round(E(g2)$weight,2),
      vertex.size=35,
@@ -227,36 +236,25 @@ cat("\nCOMMENT A2(a): Two main communicating structures exist: {1,2} and {3–7}
 
 ################ A2(b & c) ################
 
-cat("\nA2(b) CLASSIFICATION:\n")
-cat("• {1,2} forms a closed communicating class\n")
-cat("• States 3–7 form a second interacting class\n")
-cat("• No absorbing states present\n")
-cat("• Periodicity exists in {1,2} cycle\n")
-
 paths2 <- lapply(1:2, function(x){
   simulate_path(P2, sample(1:7,1), 30)
 })
 
-write.xlsx(as.data.frame(do.call(cbind, paths2)),
-           file.path(out_dir,"A2c_Trajectories.xlsx"))
+write.csv(as.data.frame(do.call(cbind, paths2)),
+          file.path(out_dir,"A2","A2c_Trajectories.csv"),
+          row.names = FALSE)
 
 cat("\nA2(c) SIMULATION COMMENT:\n")
 cat("Trajectories show switching between classes depending on starting state.\n")
 cat("Long-run behavior depends heavily on initial conditions.\n")
 
-png(file.path(out_dir, "A2c_Trajectories.png"), width=800, height=600)
+png(file.path(out_dir,"A2","A2c_Trajectories.png"), width=800, height=600)
 matplot(do.call(cbind, paths2), type="l", lwd=2,
         col=c("purple","darkgreen"),
         main="A2(c): Trajectories")
 
 mtext("COMMENT: Class-dependent trajectory behavior", side=1, line=3)
 dev.off()
-
-################ A2(d) ################
-
-cat("\nA2(d) LIMITING BEHAVIOR:\n")
-cat("Chain is NOT fully ergodic due to multiple communicating classes.\n")
-cat("Limiting distribution depends on initial class.\n")
 
 ############################################################
 # ===================== A3 ================================
@@ -281,8 +279,9 @@ P_evening <- matrix(c(
 pi <- c(1,0,0)
 pi_6pm <- pi %*% (P_day %^% 9) %*% (P_evening %^% 6)
 
-write.xlsx(data.frame(State=1:3, Prob=pi_6pm),
-           file.path(out_dir,"A3a.xlsx"))
+write.csv(data.frame(State=1:3, Prob=pi_6pm),
+          file.path(out_dir,"A3","A3a.csv"),
+          row.names = FALSE)
 
 cat("\nA3(a) RESULT INTERPRETATION:\n")
 cat("Starting in LIGHT state, probability shifts toward HEAVY and JAMMED by 6PM.\n")
@@ -302,16 +301,11 @@ simulate_A3 <- function(){
 sim <- replicate(10000, simulate_A3())
 emp <- table(sim)/10000
 
-write.xlsx(data.frame(State=1:3, Simulated=emp),
-           file.path(out_dir,"A3b.xlsx"))
+write.csv(data.frame(State=1:3, Simulated=emp),
+          file.path(out_dir,"A3","A3b.csv"),
+          row.names = FALSE)
 
-cat("\nA3(b) SIMULATION COMMENT:\n")
-cat("Simulation confirms theoretical distribution.\n")
-cat("High congestion persistence leads to JAMMED dominance.\n")
-
-print(data.frame(State=names(emp), Prob=as.numeric(emp)))
-
-png(file.path(out_dir, "A3b_Comparison.png"), width=800, height=600)
+png(file.path(out_dir,"A3","A3b_Comparison.png"), width=800, height=600)
 barplot(rbind(pi_6pm, emp), beside=TRUE,
         col=c("blue","red"),
         legend=c("Theoretical","Simulated"),
